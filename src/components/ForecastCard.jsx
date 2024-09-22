@@ -3,7 +3,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const ForecastCard = ({ day, tempMax, tempMin, icon, isCelsius }) => {
-  // Function to convert Celsius to Fahrenheit if isCelsius is false
   const convertTemperature = (temp) => isCelsius ? temp : Math.round((temp * 9/5 + 32) * 100) / 100;
 
   return (

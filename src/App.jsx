@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { fetchWeatherByCity, fetchFiveDayForecast } from './services/weatherService';
@@ -12,7 +11,6 @@ const App = () => {
   const [isCelsius, setIsCelsius] = useState(true);
 
   useEffect(() => {
-    // On initial load, check for cached weather data in localStorage
     const cachedCity = localStorage.getItem('city');
     const cachedWeatherData = localStorage.getItem('weatherData');
     const cachedForecastData = localStorage.getItem('forecastData');
@@ -21,8 +19,7 @@ const App = () => {
       setWeatherData(JSON.parse(cachedWeatherData));
       setForecastData(JSON.parse(cachedForecastData));
     } else {
-      // If no cache is found, fetch default city (New Delhi) weather
-      fetchWeather('New Delhi');
+      fetchWeather('New Delhi');   //if catch data is not available default city will be New Delhi.
     }
   }, []);
 
@@ -31,7 +28,6 @@ const App = () => {
       const data = await fetchWeatherByCity(city);
       const forecast = await fetchFiveDayForecast(city);
       
-      // Set weather data and forecast data in state
       setWeatherData({
         city: data.name,
         temp: data.main.temp,
@@ -48,7 +44,6 @@ const App = () => {
       
       setForecastData(forecastData);
 
-      // Cache the city, weather data, and forecast in localStorage
       localStorage.setItem('city', city);
       localStorage.setItem('weatherData', JSON.stringify({
         city: data.name,
@@ -67,7 +62,7 @@ const App = () => {
   const toggleTemperatureUnit = () => setIsCelsius(!isCelsius);
 
   const convertTemperature = (temp) => {
-    return isCelsius ? temp : Math.round((temp * 9/5 + 32) * 100) / 100;
+    return isCelsius ? temp : Math.round((temp * 9/5 + 32) * 100) / 100;  //only two decimal places will be displayed
   };
 
   return (
@@ -97,19 +92,19 @@ const App = () => {
                   tempMax={convertTemperature(forecast.tempMax)}
                   tempMin={convertTemperature(forecast.tempMin)}
                   icon={forecast.icon}
-                  isCelsius={isCelsius}  // Pass isCelsius here
+                  isCelsius={isCelsius} 
                 />
               ))}
             </div>
           </>
         )}
-
+        
         <button
           className="mt-4 px-6 py-3 bg-green-600 bg-opacity-60 text-white rounded-full shadow-lg hover:bg-green-500 backdrop-filter backdrop-blur-lg"
           onClick={toggleTemperatureUnit}
         >
-          Switch to {isCelsius ? 'Fahrenheit' : 'Celsius'}
-        </button>
+          Switch to {isCelsius ? 'Fahrenheit' : 'Celsius'} 
+        </button> 
       </div>
     </div>
   );
