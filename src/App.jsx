@@ -19,7 +19,7 @@ const App = () => {
       setWeatherData(JSON.parse(cachedWeatherData));
       setForecastData(JSON.parse(cachedForecastData));
     } else {
-      fetchWeather('New Delhi');   //if catch data is not available default city will be New Delhi.
+      fetchWeather('New Delhi');   // If cache data is not available, default city will be New Delhi.
     }
   }, []);
 
@@ -27,21 +27,26 @@ const App = () => {
     try {
       const data = await fetchWeatherByCity(city);
       const forecast = await fetchFiveDayForecast(city);
-      
+
       setWeatherData({
         city: data.name,
         temp: data.main.temp,
         condition: data.weather[0].description,
         icon: data.weather[0].icon,
       });
-      
-      const forecastData = forecast.slice(0, 5).map((entry) => ({
+
+      // Filter the forecast to get only one entry per day (typically around noon)
+      const filteredForecast = forecast.filter((entry) =>
+        entry.dt_txt.includes('12:00:00')
+      );
+
+      const forecastData = filteredForecast.slice(0, 5).map((entry) => ({
         day: new Date(entry.dt_txt).toLocaleString('en-US', { weekday: 'long' }),
         tempMax: entry.main.temp_max,
         tempMin: entry.main.temp_min,
         icon: entry.weather[0].icon,
       }));
-      
+
       setForecastData(forecastData);
 
       localStorage.setItem('city', city);
@@ -62,7 +67,7 @@ const App = () => {
   const toggleTemperatureUnit = () => setIsCelsius(!isCelsius);
 
   const convertTemperature = (temp) => {
-    return isCelsius ? temp : Math.round((temp * 9/5 + 32) * 100) / 100;  //only two decimal places will be displayed
+    return isCelsius ? temp : Math.round((temp * 9/5 + 32) * 100) / 100;  // Only two decimal places will be displayed
   };
 
   return (
